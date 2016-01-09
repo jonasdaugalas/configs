@@ -43,7 +43,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; helm turn off for find file ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-to-list 'helm-completing-read-handlers-alist '(find-file . nil))
+(eval-after-load 'helm-mode
+  '(add-to-list 'helm-completing-read-handlers-alist '(find-file)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Scrolling config ;;
