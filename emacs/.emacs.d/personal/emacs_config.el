@@ -12,7 +12,7 @@
 ;; install additional packages - add any to this list that you want to
 ;; be installed automatically
 (require 'prelude-packages nil 'noerror)
-(prelude-require-packages '(multiple-cursors expand-region))
+(prelude-require-packages '(comment-dwim-2 rebox2 multiple-cursors expand-region))
 
 ;; enable arrows
 (setq prelude-guru nil)
@@ -78,6 +78,7 @@
   (global-set-key (kbd "M-k") 'next-line)
   (define-key helm-map (kbd "M-k") 'helm-next-line)
   (define-key company-active-map (kbd "M-k") 'company-select-next)
+  (define-key js2-mode-map (kbd "M-j") nil) ; disable js2-line-break
   (global-set-key (kbd "M-j") 'backward-char)
   (define-key helm-map (kbd "M-j") 'helm-previous-source)
   (global-set-key (kbd "M-l") 'forward-char)
