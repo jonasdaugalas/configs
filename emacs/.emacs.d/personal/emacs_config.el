@@ -64,7 +64,7 @@
 (with-eval-after-load "helpers.el"
 
   ;; Emacs
-  (global-set-key (kbd "M-a") 'execute-extended-command)
+  (global-set-key (kbd "M-a") 'helm-M-x)
 
   ;; Files
   (global-set-key (kbd "C-o") 'find-file)
