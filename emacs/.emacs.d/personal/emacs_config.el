@@ -2,7 +2,6 @@
 ;; basic emacs configuration to be used with prelude ;;
 ;; ------------------------------------------------- ;;
 
-
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 
 ;; Add MELPA repository for packages
@@ -17,7 +16,7 @@
 (require 'prelude-packages nil 'noerror)
 (prelude-require-packages
  '(comment-dwim-2 rebox2 multiple-cursors expand-region
-                  mu4e-alert mu4e-maildirs-extension))
+                  mu4e-alert mu4e-maildirs-extension ox-reveal))
 
 ;; enable arrows
 (setq prelude-guru nil)
@@ -50,6 +49,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (eval-after-load 'helm-mode
   '(add-to-list 'helm-completing-read-handlers-alist '(find-file)))
+
+
+;;;;;;;;;;;;;;;;
+;; org reveal ;;
+;;;;;;;;;;;;;;;;
+(setq org-reveal-root "file:///opt/revealjs")
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Scrolling config ;;
