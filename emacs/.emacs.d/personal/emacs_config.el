@@ -17,7 +17,7 @@
 (require 'prelude-packages nil 'noerror)
 (prelude-require-packages
  '(comment-dwim-2 rebox2 multiple-cursors expand-region
-                  mu4e-alert mu4e-maildirs-extension))
+                  mu4e-alert mu4e-maildirs-extension helm-mt))
 
 ;; enable arrows
 (setq prelude-guru nil)
@@ -262,11 +262,14 @@
   (global-unset-key (kbd "M-8"))
   (global-set-key (kbd "M-8") 'er/expand-region)
   (global-set-key (kbd "M-ū") 'er/expand-region)
-  (global-unset-key (kbd "C-\\"))
-  (global-set-key (kbd "C-\\") 'helm-mini)
   (global-unset-key (kbd "M-w"))
   (global-set-key (kbd "M-w") 'just-one-space)
   (global-set-key (kbd "M-]") 'aj-toggle-fold)
+  ;; helm-mini
+  (global-unset-key (kbd "C-\\"))
+  (global-set-key (kbd "C-\\") 'helm-mini)
+  ;; helm-mt
+  (global-set-key (kbd "C-|") 'helm-mt)
   )
 (provide 'emacs_config)
 ;;; emacs_config.el ends here
