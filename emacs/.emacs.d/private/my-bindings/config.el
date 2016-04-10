@@ -105,14 +105,14 @@
 
 
 (defun my-bindings/post-init-company ()
-  (use-package window-numbering
+  (use-package company
     :config
     (define-key company-active-map (kbd "M-i") 'company-select-previous)
     (define-key company-active-map (kbd "M-k") 'company-select-next)
     ))
 
 (defun my-bindings/post-init-js2 ()
-  (use-package window-numbering
+  (use-package js2
     :config
     (define-key js2-mode-map (kbd "M-j") nil) ; disable js2-line-break
     ))
