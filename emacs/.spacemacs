@@ -36,6 +36,7 @@ values."
      syntax-checking
      version-control
      javascript
+     python
      (mu4e :variables
            mu4e-installation-path "/usr/local/share/emacs/site-lisp/mu4e/")
      my-bindings
@@ -100,7 +101,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(zenburn
+   dotspacemacs-themes '(smyx
+                         zenburn
                          spacemacs-dark
                          spacemacs-light
                          solarized-light
@@ -108,7 +110,7 @@ values."
                          leuven
                          monokai)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
-   dotspacemacs-colorize-cursor-according-to-state t
+   dotspacemacs-colorize-cursor-according-to-state nil
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
@@ -203,7 +205,7 @@ values."
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
    dotspacemacs-inactive-transparency 90
    ;; If non nil unicode symbols are displayed in the mode line. (default t)
-   dotspacemacs-mode-line-unicode-symbols t
+   dotspacemacs-mode-line-unicode-symbols nil
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters the
    ;; point when it reaches the top or bottom of the screen. (default t)
@@ -257,6 +259,23 @@ you should place you code here."
   (setq powerline-default-separator nil)
   (setq paradox-github-token "841c1b9347f97c7cf12cd61f615077b77fa179dc")
   )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("8288b9b453cdd2398339a9fd0cec94105bc5ca79b86695bd7bf0381b1fbe8147" default))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "#414141" :foreground "#F7F7F7" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 112 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
 
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
+ '(flyspell-duplicate ((t (:foreground "MistyRose1" :underline (:color "orange red" :style wave) :weight normal))))
+ '(flyspell-incorrect ((t (:foreground "MistyRose1" :underline (:color "orange red" :style wave) :weight normal))))
+ '(region ((t (:background "dark slate gray")))))
