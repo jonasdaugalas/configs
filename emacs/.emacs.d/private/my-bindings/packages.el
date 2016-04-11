@@ -29,7 +29,7 @@
 ;;; Code:
 
 (defconst my-bindings-packages
-  '(helm dired window-numbering company js2 expand-region comment-dwim-2 rebox2)
+  '(helm dired window-numbering company js2-mode expand-region comment-dwim-2 rebox2)
   "The list of Lisp packages required by the my-bindings layer.
 
 Each entry is either:
