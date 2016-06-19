@@ -1,4 +1,4 @@
-(cua-mode t)
+;(cua-mode t)
 
 ;; Files
 (global-set-key (kbd "C-o") 'find-file)
@@ -111,8 +111,8 @@
     (define-key company-active-map (kbd "M-k") 'company-select-next)
     ))
 
-(defun my-bindings/post-init-js2 ()
-  (use-package js2
+(defun my-bindings/post-init-js2-mode ()
+  (use-package js2-mode
     :config
     (define-key js2-mode-map (kbd "M-j") nil) ; disable js2-line-break
     ))
