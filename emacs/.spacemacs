@@ -307,7 +307,8 @@ you should place you code here."
   (setq org-default-notes-file (concat org-directory "notes.org"))
   (setq org-default-todos-file (concat org-directory "todos.org"))
   (setq org-default-logs-file (concat org-directory "logs.org"))
-  (setq org-agenda-files (list org-directory))
+  (setq org-archive-location (concat org-directory "archive.org::* From %s"))
+  (setq org-agenda-files (list (concat org-directory "todos.org")))
   (setq
    org-capture-templates
    (quote
