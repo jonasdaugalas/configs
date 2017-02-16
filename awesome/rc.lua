@@ -393,7 +393,11 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey,           }, "Tab",   function () kbdcfg.switch() end),
 
--- {{ Opens }} --
+-- {{ Toggle multi monitors}} --
+
+    awful.key({ modkey,           }, "F7", function() awful.util.spawn("python /home/jonas/configs/xrandr/xrandr-toggle.py") end),
+
+-- {{ Opens Browser}} --
 
     awful.key({ modkey,           }, "w", function() awful.util.spawn("firefox") end),
     -- awful.key({ modkey,           }, "n", function() awful.util.spawn("firefox -private") end),
@@ -406,7 +410,7 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey,           }, "s", function() awful.util.spawn("skype") end),
 
--- {{ Spawns Sublime }} --
+-- {{ Spawns emacs }} --
 
     awful.key({ modkey,           }, "e", function() awful.util.spawn("emacs") end),
 
