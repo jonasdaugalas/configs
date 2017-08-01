@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: todo
+# key: todo
+# --
+* TODO $0
+:PROPERTIES:
+:CREATED: `(let ((x (org-insert-time-stamp nil t t ))))`
+:END:
