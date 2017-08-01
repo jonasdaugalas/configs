@@ -367,6 +367,7 @@ you should place you code here."
 
   ;; Deft
   (setq deft-directory "~/Dropbox/org/")
+  (setq deft-recursive t)
 
   ;; Org and agenda
   (setq org-directory "~/Dropbox/org/")
