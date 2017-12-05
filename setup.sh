@@ -20,17 +20,17 @@ ln -sf --relative ./emacs/.spacemacs ~/.spacemacs
 echo linking config.fish
 ln -sf --relative ./fish/config.fish ~/.config/fish/config.fish
 
-AWESOME=~/.config/awesome
-if [ -d "$AWESOME" ]; then
-    if [ -L "$AWESOME" ]; then
-        # It is a symlink!
-        echo removing symlink $AWESOME
-        rm "$AWESOME"
-    else
-        # It's a directory!
-        echo $AWESOME does not look like symlink. Have a look. Exiting...
-        exit
-    fi
-fi
-echo linking $AWESOME
-ln -sf --relative ./awesome/ ~/.config/awesome
+# AWESOME=~/.config/awesome
+# if [ -d "$AWESOME" ]; then
+#     if [ -L "$AWESOME" ]; then
+#         # It is a symlink!
+#         echo removing symlink $AWESOME
+#         rm "$AWESOME"
+#     else
+#         # It's a directory!
+#         echo $AWESOME does not look like symlink. Have a look. Exiting...
+#         exit
+#     fi
+# fi
+# echo linking $AWESOME
+# ln -sf --relative ./awesome/ ~/.config/awesome
