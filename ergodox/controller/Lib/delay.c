@@ -1,7 +1,7 @@
 /* Teensyduino Core Library
  * http://www.pjrc.com/teensy/
  * Copyright (c) 2013 PJRC.COM, LLC.
- * Modifications by Jacob Alexander 2013-2014
+ * Modifications by Jacob Alexander 2013-2017
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -32,13 +32,13 @@
 // ----- Local Includes -----
 
 #include "delay.h"
-#include "mk20dx.h"
+#include "kinetis.h"
 
 
 
 // ----- Variables -----
 
-// the systick interrupt is supposed to increment this at 1 kHz rate
+// The systick interrupt is supposed to increment this at 1 kHz rate
 volatile uint32_t systick_millis_count = 0;
 
 

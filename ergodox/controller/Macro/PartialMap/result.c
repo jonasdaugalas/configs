@@ -1,4 +1,4 @@
-/* Copyright (C) 2014-2016 by Jacob Alexander
+/* Copyright (C) 2014-2017 by Jacob Alexander
  *
  * This file is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 // Compiler Includes
 #include <Lib/MacroLib.h>
+#include <Lib/periodic.h>
 
 // Project Includes
 #include <led.h>
@@ -38,6 +39,23 @@ typedef enum ResultMacroEval {
 
 
 
+// ----- Structs -----
+
+// Storage container for delayed result capabilities
+typedef struct ResultCapabilityStackItem {
+	TriggerMacro *trigger;
+	uint8_t       state;
+	uint8_t       stateType;
+	uint8_t       capabilityIndex;
+	uint8_t      *args;
+} ResultCapabilityStackItem;
+
+typedef struct ResultCapabilityStack {
+	ResultCapabilityStackItem stack[ ResultCapabilityStackSize_define ];
+	uint8_t                   size;
+} ResultCapabilityStack;
+
+
 
 // ----- KLL Generated Variables -----
 
@@ -52,19 +70,21 @@ extern ResultMacroRecord ResultMacroRecordList[];
 
 // Pending Result Macro Index List
 //  * Any result macro that needs processing from a previous macro processing loop
-index_uint_t macroResultMacroPendingList[ ResultMacroNum ] = { 0 };
-index_uint_t macroResultMacroPendingListSize = 0;
+ResultsPending macroResultMacroPendingList;
+
+// Delayed capabilities stack
+volatile ResultCapabilityStack macroResultDelayedCapabilities;
 
 
 
 // ----- Functions -----
 
 // Evaluate/Update ResultMacro
-inline ResultMacroEval Macro_evalResultMacro( var_uint_t resultMacroIndex )
+ResultMacroEval Macro_evalResultMacro( ResultPendingElem resultElem )
 {
 	// Lookup ResultMacro
-	const ResultMacro *macro = &ResultMacroList[ resultMacroIndex ];
-	ResultMacroRecord *record = &ResultMacroRecordList[ resultMacroIndex ];
+	const ResultMacro *macro = &ResultMacroList[ resultElem.index ];
+	ResultMacroRecord *record = &ResultMacroRecordList[ resultElem.index ];
 
 	// Current Macro position
 	var_uint_t pos = record->pos;
@@ -84,11 +104,31 @@ inline ResultMacroEval Macro_evalResultMacro( var_uint_t resultMacroIndex )
 		// Assign TriggerGuide element (key type, state and scancode)
 		ResultGuide *guide = (ResultGuide*)(&macro->guide[ comboItem ]);
 
-		// Do lookup on capability function
-		void (*capability)(uint8_t, uint8_t, uint8_t*) = (void(*)(uint8_t, uint8_t, uint8_t*))(CapabilitiesList[ guide->index ].func);
+		// Determine if this is a safe capability (i.e. can be execute it immediately)
+		if ( CapabilitiesList[ guide->index ].features & CapabilityFeature_Safe )
+		{
+			// Do lookup on capability function
+			void (*capability)(TriggerMacro*, uint8_t, uint8_t, uint8_t*) = \
+				(void(*)(TriggerMacro*, uint8_t, uint8_t, uint8_t*))(CapabilitiesList[ guide->index ].func);
 
-		// Call capability
-		capability( record->state, record->stateType, &guide->args );
+			// Call capability
+			capability( resultElem.trigger, record->state, record->stateType, &guide->args );
+		}
+		// Otherwise, queue up the capability for later
+		else if ( macroResultDelayedCapabilities.size < ResultCapabilityStackSize_define )
+		{
+			uint8_t size = macroResultDelayedCapabilities.size;
+			macroResultDelayedCapabilities.stack[ size ].trigger         = resultElem.trigger;
+			macroResultDelayedCapabilities.stack[ size ].state           = record->state;
+			macroResultDelayedCapabilities.stack[ size ].stateType       = record->stateType;
+			macroResultDelayedCapabilities.stack[ size ].capabilityIndex = guide->index;
+			macroResultDelayedCapabilities.stack[ size ].args            = &guide->args;
+			macroResultDelayedCapabilities.size++;
+		}
+		else
+		{
+			warn_print("Delayed capability stack full!");
+		}
 
 		// Increment counters
 		funcCount++;
@@ -110,13 +150,11 @@ inline ResultMacroEval Macro_evalResultMacro( var_uint_t resultMacroIndex )
 }
 
 
-void Result_add( uint32_t index )
-{
-}
-
-
 void Result_setup()
 {
+	// Initialize macroResultMacroPendingList
+	macroResultMacroPendingList.size = 0;
+
 	// Initialize ResultMacro states
 	for ( var_uint_t macro = 0; macro < ResultMacroNum; macro++ )
 	{
@@ -124,6 +162,37 @@ void Result_setup()
 		ResultMacroRecordList[ macro ].state     = 0;
 		ResultMacroRecordList[ macro ].stateType = 0;
 	}
+
+	// Reset delayed capabilities stack
+	macroResultDelayedCapabilities.size = 0;
+}
+
+
+// Process delayed capabilities
+// Capabilities that are not called immediately (i.e. ones that are not deemed as thread safe)
+// are processed with this function
+void Result_process_delayed()
+{
+	// Process stack until empty
+	// For each empty, make sure interrupts are disabled
+	while ( macroResultDelayedCapabilities.size > 0 )
+	{
+		// Lookup stack
+		volatile ResultCapabilityStackItem *item = &macroResultDelayedCapabilities.stack[macroResultDelayedCapabilities.size - 1];
+
+		// Do lookup on capability function
+		void (*capability)(TriggerMacro*, uint8_t, uint8_t, uint8_t*) = \
+			(void(*)(TriggerMacro*, uint8_t, uint8_t, uint8_t*))(CapabilitiesList[ item->capabilityIndex ].func);
+
+		// Call capability
+		capability( item->trigger, item->state, item->stateType, item->args );
+
+		// Decrease stack size
+		macroResultDelayedCapabilities.size--;
+	}
+
+	// Re-enable periodic interrupts
+	Periodic_enable();
 }
 
 
@@ -131,17 +200,20 @@ void Result_process()
 {
 	// Tail pointer for macroResultMacroPendingList
 	// Macros must be explicitly re-added
-	var_uint_t macroResultMacroPendingListTail = 0;
+	index_uint_t macroResultMacroPendingListTail = 0;
 
 	// Iterate through the pending ResultMacros, processing each of them
-	for ( var_uint_t macro = 0; macro < macroResultMacroPendingListSize; macro++ )
+	for ( index_uint_t macro = 0; macro < macroResultMacroPendingList.size; macro++ )
 	{
-		switch ( Macro_evalResultMacro( macroResultMacroPendingList[ macro ] ) )
+		switch ( Macro_evalResultMacro( macroResultMacroPendingList.data[ macro ] ) )
 		{
 		// Re-add macros to pending list
 		case ResultMacroEval_DoNothing:
 		default:
-			macroResultMacroPendingList[ macroResultMacroPendingListTail++ ] = macroResultMacroPendingList[ macro ];
+			memcpy( &macroResultMacroPendingList.data[ macroResultMacroPendingListTail++ ],
+				&macroResultMacroPendingList.data[ macro ],
+				sizeof( ResultPendingElem )
+			);
 			break;
 
 		// Remove Macro from Pending List, nothing to do, removing by default
@@ -151,6 +223,9 @@ void Result_process()
 	}
 
 	// Update the macroResultMacroPendingListSize with the tail pointer
-	macroResultMacroPendingListSize = macroResultMacroPendingListTail;
+	macroResultMacroPendingList.size = macroResultMacroPendingListTail;
+
+	// Disable periodic interrupts if we have delayed capabilities
+	Periodic_disable();
 }
 
