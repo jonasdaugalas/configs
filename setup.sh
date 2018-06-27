@@ -20,6 +20,9 @@ fi
 echo linking config.fish
 ln -sf --relative ./fish/config.fish ~/.config/fish/config.fish
 
+echo linking .tmux.conf
+ln -sf --relative ./tmux/.tmux.conf ~/.tmux.conf
+
 AWESOME=~/.config/awesome
 if [ ! -d "$AWESOME" ]; then
     mkdir $AWESOME
@@ -28,7 +31,7 @@ fi
 if [ -d "$AWESOME/themes" ]; then
     echo Awesome themes already esist at $AWESOME/themes
 else
-    git clone --recursive https://github.com/lcpz/awesome-copycats.git 
+    git clone --recursive https://github.com/lcpz/awesome-copycats.git
     mv -bv awesome-copycats/* $AWESOME; rm -rf awesome-copycats
 fi
 
@@ -38,4 +41,3 @@ if [ -f "$AWESOME/rc.lua" ]; then
 fi
 echo linking $AWESOME/rc.lua
 ln -sf --relative ./awesome/rc.lua $AWESOME/rc.lua
-
