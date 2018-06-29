@@ -16,28 +16,32 @@ local wibox         = require("wibox")
 local beautiful     = require("beautiful")
 local naughty       = require("naughty")
 local lain          = require("lain")
---local menubar       = require("menubar")
 local freedesktop   = require("freedesktop")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 -- }}}
 
 -- {{{ Error handling
 if awesome.startup_errors then
-  naughty.notify({ preset = naughty.config.presets.critical,
-                   title = "Oops, there were errors during startup!",
-                   text = awesome.startup_errors })
+  naughty.notify({
+      preset = naughty.config.presets.critical,
+      title = "Oops, there were errors during startup!",
+      text = awesome.startup_errors
+  })
 end
 
 do
   local in_error = false
-  awesome.connect_signal("debug::error", function (err)
-                           if in_error then return end
-                           in_error = true
-
-                           naughty.notify({ preset = naughty.config.presets.critical,
-                                            title = "Oops, an error happened!",
-                                            text = tostring(err) })
-                           in_error = false
+  awesome.connect_signal(
+    "debug::error",
+    function (err)
+      if in_error then return end
+      in_error = true
+      naughty.notify({
+          preset = naughty.config.presets.critical,
+          title = "Oops, an error happened!",
+          text = tostring(err)
+      })
+      in_error = false
   end)
 end
 -- }}}
@@ -79,7 +83,6 @@ local terminal     = "terminator"
 local editor       = os.getenv("EDITOR") or "nano"
 local gui_editor   = "gvim"
 local browser      = "firefox"
-local guieditor    = "atom"
 
 awful.util.terminal = terminal
 awful.util.tagnames = { "1", "2", "3", "4", "5" }
@@ -89,7 +92,7 @@ awful.layout.layouts = {
   awful.layout.suit.tile.left,
   awful.layout.suit.tile.bottom,
   awful.layout.suit.tile.top,
-  --awful.layout.suit.fair,
+  awful.layout.suit.fair,
   --awful.layout.suit.fair.horizontal,
   --awful.layout.suit.spiral,
   --awful.layout.suit.spiral.dwindle,
@@ -192,8 +195,6 @@ awful.util.mymainmenu = freedesktop.menu.build({
       -- other triads can be put here
     }
 })
---menubar.utils.terminal = terminal -- Set the Menubar terminal for applications that require it
--- }}}
 
 -- {{{ Screen
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
@@ -472,14 +473,8 @@ globalkeys = awful.util.table.join(
   -- User programs
   awful.key({ modkey }, "q", function () awful.spawn(browser) end,
     {description = "run browser", group = "launcher"}),
-  awful.key({ modkey }, "a", function () awful.spawn(guieditor) end,
-    {description = "run gui editor", group = "launcher"}),
 
   -- Default
-  --[[ Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end,
-    {description = "show the menubar", group = "launcher"})
-  --]]
   --[[ dmenu
     awful.key({ modkey }, "x", function ()
     awful.spawn(string.format("dmenu_run -i -fn 'Monospace' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",

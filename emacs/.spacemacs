@@ -60,6 +60,7 @@ values."
             c-c++-default-mode-for-headers 'c++-mode)
      python
      erc
+     gnus
      ;; (mu4e :variables
      ;;       mu4e-installation-path "/usr/local/share/emacs/site-lisp/mu4e/")
      ;; my-mu4e-config
@@ -140,12 +141,12 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(zenburn
-                         smyx
+                         misterioso
+                         tangotango
                          spacemacs-dark
                          spacemacs-light
-                         solarized-light
-                         solarized-dark
                          leuven
+                         smyx
                          monokai)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state nil
