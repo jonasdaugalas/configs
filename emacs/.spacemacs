@@ -376,6 +376,18 @@ you should place you code here."
   (spacemacs/set-leader-keys-for-major-mode 'c++-mode "r d f" 'js-doc-insert-function-doc)
   (spacemacs/set-leader-keys-for-major-mode 'c-mode "r d f" 'js-doc-insert-function-doc)
 
+  ;; csharp
+  (defun my-csharp-mode-setup ()
+    (setq indent-tabs-mode nil)
+    (setq c-syntactic-indentation t)
+    (c-set-style "ellemtel")
+    (setq c-basic-offset 4)
+    (setq truncate-lines t)
+    (setq tab-width 4)
+    (setq evil-shift-width 4)
+    (flycheck-mode))
+  (add-hook 'csharp-mode-hook 'my-csharp-mode-setup t)
+
   ;; Deft
   (setq deft-directory "~/Dropbox/org/")
   (setq deft-recursive t)
