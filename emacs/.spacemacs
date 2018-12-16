@@ -339,10 +339,15 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
 
+  ;; limit history
+  (setq history-length 100)
+  (put 'minibuffer-history 'history-length 50)
+  (put 'evil-ex-history 'history-length 50)
+  (put 'kill-ring 'history-length 25)
   ;; java
-  (setq eclim-eclipse-dirs '("/opt/eclipse/java-2018-09/eclipse")
-        eclim-executable "/home/jonas/.p2/pool/plugins/org.eclim_2.8.0/bin/eclim"
-        eclimd-executable "/opt/eclipse/java-2018-09/eclipse/eclimd")
+  ;; (setq eclim-eclipse-dirs '("/opt/eclipse/java-2018-09/eclipse")
+  ;;       eclim-executable "/home/jonas/.p2/pool/plugins/org.eclim_2.8.0/bin/eclim"
+  ;;       eclimd-executable "/opt/eclipse/java-2018-09/eclipse/eclimd")
 
   ;; lock files
   (setq create-lockfiles nil)
