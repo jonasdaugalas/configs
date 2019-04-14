@@ -1,7 +1,4 @@
-# set PATH /home/jonas/local/bin $PATH
-# export ANDROID_HOME=/opt/android/
-# export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
-if status is-interactive
-    and not set -q TMUX
-    tmux
-end
+set PATH /home/jonas/local/bin:/home/jonas/.yarn/bin $PATH
+set PATH $PATH /usr/local/go/bin:/home/jonas/go/bin
+set PKG_CONFIG_PATH $PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
+alias python=python3
