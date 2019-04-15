@@ -349,6 +349,8 @@ you should place you code here."
   ;;       eclim-executable "/home/jonas/.p2/pool/plugins/org.eclim_2.8.0/bin/eclim"
   ;;       eclimd-executable "/opt/eclipse/java-2018-09/eclipse/eclimd")
 
+  (setq projectile-switch-project-action 'projectile-dired)
+
   ;; lock files
   (setq create-lockfiles nil)
 
