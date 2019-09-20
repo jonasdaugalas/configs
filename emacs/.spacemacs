@@ -370,6 +370,8 @@ you should place you code here."
   ;; visual line navigation
   (add-hook 'text-mode-hook 'spacemacs/toggle-visual-line-navigation-on)
 
+  (setq ispell-program-name "/usr/bin/aspell")
+
   ;; have Ctrl-s for saving
   (global-unset-key (kbd "C-s"))
   (global-set-key (kbd "C-s") 'save-buffer)
