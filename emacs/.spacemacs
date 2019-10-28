@@ -60,7 +60,11 @@ values."
           org-journal-dir "~/Dropbox/org/journal"
           org-journal-file-format "%Y%m%d.org")
      php
-     python
+     (python :variables
+             python-backend 'lsp
+             python-format-on-save t
+             python-formatter 'black)
+     scala
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
@@ -80,6 +84,7 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages
    '(
+     direnv
      editorconfig
      sphinx-doc
      )
@@ -345,24 +350,32 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
 
+  (setq projectile-switch-project-action 'projectile-dired)
+
   ;; limit history
   (setq history-length 100)
   (put 'minibuffer-history 'history-length 50)
   (put 'evil-ex-history 'history-length 50)
   (put 'kill-ring 'history-length 25)
+
+  ;; LSP
+  (use-package lsp-mode
+    :hook (prog-mode . lsp)
+    :commands (lsp lsp-deferred))
+  (use-package company-lsp
+    :commands company-lsp)
+
   ;; java
   (setq eclim-eclipse-dirs '("/opt/eclipse/java-2019-06/eclipse")
         eclim-executable "/home/jdaugalas/.p2/pool/plugins/org.eclim_2.8.0/bin/eclim"
         eclimd-executable "/opt/eclipse/java-2019-06/eclipse/eclimd")
 
-  (setq projectile-switch-project-action 'projectile-dired)
+  ;; scala
+  (add-to-list 'configuration-layer-elpa-archives '("melpa-stable" . "stable.melpa.org/packages/"))
+  (add-to-list 'package-pinned-packages '(ensime . "melpa-stable"))
 
   ;; lock files
   (setq create-lockfiles nil)
-
-  (use-package lsp-mode
-    :hook (prog-mode . lsp-deferred)
-    :commands (lsp lsp-deferred))
 
   ;; fill column indicator
   (add-hook 'prog-mode-hook 'fci-mode)
@@ -379,8 +392,7 @@ you should place you code here."
   (global-set-key (kbd "C-S-s") 'write-file)
 
   ;; powerline
-  (setq powerline-default-separator nil)
-
+  (setq powerline-deault-separator nil)
 
   ;; python
   (add-hook
@@ -402,18 +414,6 @@ you should place you code here."
   (add-hook 'c-mode-common-hook 'my-c-setup)
   (spacemacs/set-leader-keys-for-major-mode 'c++-mode "r d f" 'js-doc-insert-function-doc)
   (spacemacs/set-leader-keys-for-major-mode 'c-mode "r d f" 'js-doc-insert-function-doc)
-
-  ;; csharp
-  (defun my-csharp-mode-setup ()
-    (setq indent-tabs-mode nil)
-    (setq c-syntactic-indentation t)
-    (c-set-style "ellemtel")
-    (setq c-basic-offset 4)
-    (setq truncate-lines t)
-    (setq tab-width 4)
-    (setq evil-shift-width 4)
-    (flycheck-mode))
-  (add-hook 'csharp-mode-hook 'my-csharp-mode-setup t)
 
   ;; Deft
   (setq deft-directory "~/Dropbox/org/")
@@ -449,7 +449,15 @@ you should place you code here."
   ;; org-journal
   (evil-leader/set-key "Cj" 'org-journal-new-entry)
 
-  (editorconfig-mode t)
+  ;; editorconfig
+  (use-package editorconfig
+    :init
+    (spacemacs|diminish editorconfig-mode)
+    :config
+    (editorconfig-mode t))
+
+  ;; direnv
+  (direnv-mode)
 
   )
 

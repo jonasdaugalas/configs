@@ -1,6 +1,0 @@
-# key: src
-# name: src
-# --
-#+BEGIN_SRC $0
-$1
-#+END_SRC
